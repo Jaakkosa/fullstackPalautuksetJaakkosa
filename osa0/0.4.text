@@ -1,0 +1,23 @@
+0.4
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+note over selain: tekstikentän sisältö lähetetään POST:n rungon avulla
+palvelin ->selain: HTML-tiedosto
+selain -> palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+palvelin ->selain: HTML-tiedosto
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+palvelin-->selain: main.css
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+palvelin-->selain: main.js
+note over selain:
+selain alkaa suorittaa js-koodia
+joka pyytää JSON-datan palvelimelta
+end note
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+palvelin-->selain: [{ "content":"Zoinks!","date":"2022-06-06T06:14:58.014Z"" }, ...]
+note over selain:
+selain suorittaa tapahtumankäsittelijän
+joka renderöi muistiinpanot näytölle
+end note
+
+note over selain: selain pyytää vielä HTTP GET avulla faviconin ja palvelin lähettää sen sille.

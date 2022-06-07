@@ -1,0 +1,6 @@
+0.6 
+
+selain -> palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+note over selain : selain lähettää noten palvelimelle, jossa se liitetään muistiinpanojen listaan.
+note over selain : sekä se itse liittää note:n listaan ja lataa muistiinpanot uudelleen.(ei palvelimelta)
+palvelin -> selain : {"message":"note created"}

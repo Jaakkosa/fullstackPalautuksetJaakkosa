@@ -11,9 +11,10 @@ const App = () => {
   const Content = (props) => {
     return (
       <div> 
-    <p> {props.tehtävä} {props.määrä}   </p>
-    <p> {props.tehtävä2} {props.määrä2}   </p>
-    <p> {props.tehtävä3} {props.määrä3}   </p>
+   <Part tehtävä = {part1} määrä= {exercises1}/> 
+   <Part tehtävä = {part2} määrä= {exercises2}/>
+   <Part tehtävä = {part3} määrä= {exercises3}/>
+   
 
 
     </div> 
@@ -30,7 +31,21 @@ const App = () => {
 
     </div> 
     )
-  }
+    }
+
+    const Part = (props) => {
+      return (
+        <div> 
+      <p> {props.tehtävä} {props.määrä}</p>
+  
+     
+  
+  
+      </div> 
+      )
+      }
+
+
 
   const course = 'Half Stack application development'
   const part1 = 'Fundamentals of React'
@@ -43,9 +58,7 @@ const App = () => {
   return (
     <div>
     <Header nimi = {course} />
-    <Content tehtävä = {part1} määrä = {exercises1}
-    tehtävä2 = {part2} määrä2 = {exercises2}
-    tehtävä3 = {part2} määrä3 = {exercises2}      />
+    <Content/>
 <Total luku = {exercises1} luku2 = {exercises2} luku3 = {exercises2}  />
 
 

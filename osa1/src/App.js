@@ -1,30 +1,52 @@
 const App = () => {
 
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
+  }
+
+
   const Header = (props) => {
     return (
       <div> 
     <p> {props.nimi} </p>
-
     </div> 
     )
   }
   const Content = (props) => {
-    return (
-      <div> 
-   <Part tehtävä = {part1} määrä= {exercises1}/> 
-   <Part tehtävä = {part2} määrä= {exercises2}/>
-   <Part tehtävä = {part3} määrä= {exercises3}/>
+   return(
    
+      <div> 
 
+<Part parts = {props.parts} luku = {0}/> 
+<Part parts = {props.parts} luku = {1}/>
+<Part parts = {props.parts} luku = {2}/>
 
     </div> 
-    )
+    
+   )
   }
 
   const Total = (props) => {
+   
     return (
       <div> 
-    <p> Number of exercises { props.luku + props.luku2 + props.luku3}   </p>
+    <p> Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises }
+
+ </p>
 
    
 
@@ -33,11 +55,11 @@ const App = () => {
     )
     }
 
-    const Part = (props) => {
+   const Part = (props) => {
       return (
         <div> 
-      <p> {props.tehtävä} {props.määrä}</p>
-  
+      <p> {props.parts[props.luku].name} {props.parts[props.luku].exercises}</p>
+        
      
   
   
@@ -47,19 +69,13 @@ const App = () => {
 
 
 
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
+
 
   return (
     <div>
-    <Header nimi = {course} />
-    <Content/>
-<Total luku = {exercises1} luku2 = {exercises2} luku3 = {exercises2}  />
+    <Header nimi = {course.name} />
+    <Content parts = {course.parts} />
+  <Total parts = {course.parts}/>
 
 
 

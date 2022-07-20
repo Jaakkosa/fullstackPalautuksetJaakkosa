@@ -9,6 +9,11 @@ const Button = (props) => {
 
 }
 
+const StatisticLine = (props) => {
+ return(
+  <h3>{props.text} {props.value}</h3>
+ )
+}
 
 const Statistics = (props) => {
   var keskiarvo = (props.good - props.bad)/(props.good + props.bad + props.neutral)
@@ -55,20 +60,9 @@ setGood(good +1 )
 <Button handleClick = {() => setNeutral(neutral + 1)} text = "Neutraali"/>
 <Button handleClick = {() => setBad(bad + 1)} text = "Huono"/>
 <h2> Statistiikka </h2>
-<div>
-<h3> Hyvä: {good} </h3>
-
-</div>
-
-<div>
-<h3> Neutraali: {neutral} </h3>
-
-</div>
-
-<div>
-<h3> Huono: {bad} </h3>
-
-</div>
+<StatisticLine text = "hyvä" value = {good}/>
+<StatisticLine text = "neutraali" value = {neutral}/>
+<StatisticLine text = "huono" value = {bad}/>
 
 <Statistics good = {good} bad = {bad} neutral = {neutral} />
 

@@ -11,29 +11,32 @@ const Button = (props) => {
 
 const StatisticLine = (props) => {
  return(
-  <h3>{props.text} {props.value}</h3>
+<tr><td>{props.text}{props.value}</td></tr>
  )
 }
 
 const Statistics = (props) => {
   var keskiarvo = (props.good - props.bad)/(props.good + props.bad + props.neutral)
   var positive =  props.good/(props.good + props.bad + props.neutral)*100.0
+  var positiveteksti = "positiiviset"
+  var keskiarvoteksti = "keskiarvo "
+  var nofeedback = "nofeedback"
 
-    if(props.good == 0 && props.bad == 0  && props.neutral == 0) {
+
+    if(props.good === 0 && props.bad === 0  && props.neutral === 0) {
       return(
-      <div>
-        <h3> No feedback</h3>
-      </div>)
-    }
-    else {
-      return (
-        <div>
-          <h3> Keskiarvo : {keskiarvo}</h3>
-          <h3> Positiiviset : {positive}%</h3>
-        </div>
+      <tr><th>{nofeedback}</th></tr>
       )
     }
-   }
+
+  else return (
+  <>
+<tr><td>{keskiarvoteksti}{keskiarvo.toPrecision(3)}</td></tr>
+<tr><td>positiiviset {positive.toPrecision(3)}</td></tr>
+</>
+      )
+  
+    }
 
 
   
@@ -54,22 +57,20 @@ setGood(good +1 )
 )
 
   return (
-    <div className='tausta'>
+    <div>
       <h1> Arvostele Unicafe </h1>
-<Button handleClick = {handleClickGood} text = "Hyvä"/>
+<Button handleClick = {handleClickGood} text = "Hyvä"/> 
 <Button handleClick = {() => setNeutral(neutral + 1)} text = "Neutraali"/>
 <Button handleClick = {() => setBad(bad + 1)} text = "Huono"/>
 <h2> Statistiikka </h2>
-<StatisticLine text = "hyvä" value = {good}/>
-<StatisticLine text = "neutraali" value = {neutral}/>
-<StatisticLine text = "huono" value = {bad}/>
-
-<Statistics good = {good} bad = {bad} neutral = {neutral} />
-
-
-
-
-
+<table> 
+  <tbody>
+<StatisticLine text = "hyvä " value = {good}/>
+<StatisticLine text = "neutraali " value = {neutral}/>
+<StatisticLine text = "huono " value = {bad}/>
+<Statistics good = {good} bad = {bad} neutral = {neutral}/>
+</tbody>
+</table>
   
     </div>
   )

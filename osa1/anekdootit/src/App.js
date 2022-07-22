@@ -9,6 +9,16 @@ const Button = (props) => {
 
 
 const App = () => {
+
+  const points = [0,0,0,0,0,0,0 ]
+
+  const handleVote = () => {
+  let uusiLuku = pisteet[selected] + 1
+  pisteet[selected] = uusiLuku
+  setPisteet([...pisteet])
+  console.log(pisteet)
+  }
+
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -20,16 +30,26 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-
+ const [pisteet, setPisteet] = useState(points)
+ const min = 0
+ const max = 6
   return (
     <div>
       <div>
       {anecdotes[selected]}
       </div>
       <div>
-      <Button handleClick = {() => setSelected(Math.floor(Math.random()*7))} text = "seuraava"/>
-      <Button handleClick = {() => console.log(Math.floor(Math.random()*7))} text = "testi" />
+      <Button handleClick = {() => setSelected(Math.floor(Math.random() * (max - min + 1)) + min)} text = "seuraava"/>
+      <Button handleClick = {handleVote} text = "vote" />
+      </div>  
+      <div>
+    <p>Has {pisteet[selected]} votes</p>  
       </div>
+<div>
+<h1> Eniten ääniä saannut</h1>
+<p> {anecdotes[pisteet.indexOf(Math.max(...pisteet))]}</p>
+</div>
+    
   
     </div>
   )

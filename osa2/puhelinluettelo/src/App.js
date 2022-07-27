@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Numero from "./Numero"
+import Filter from "./Filter"
+import HenkilöPlus from "./Henkilö"
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -61,20 +63,8 @@ const RajausToShow = näytetäänkö
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value = {newRajaus} onChange = {rajauksenTutkiminen} />
-      </div>
-      <form onSubmit={addNew}>
-        <div>
-          name: <input value = {newName} onChange = {sisällönTutkiminen} />
-        </div>
-        <div>
-          number: <input value = {newNumber} onChange = {numeronTutkiminen}/>
-          </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter rajaus = {newRajaus} muutos = {rajauksenTutkiminen} />
+      <HenkilöPlus nimitys = {newName} tutkiminen = {sisällönTutkiminen} numeroitus = {newNumber} numeronTutkiminen = {numeronTutkiminen} uusi = {addNew} />
       <h2>Numbers</h2>
 {RajausToShow.map(person => <Numero key={person.name} name={person.name} number={person.number}/> )}
     </div>

@@ -1,13 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Numero from "./Numero"
 import Filter from "./Filter"
 import HenkilöPlus from "./Henkilö"
 
 const App = () => {
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
   const [persons, setPersons] = useState([
-    { name:'Arto Hellas',
-  number: 12345645322}
   ]) 
+
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newRajaus, setNewRajaus] = useState('')

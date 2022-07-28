@@ -27,7 +27,7 @@ const App = () => {
   const addNew = (event) => {
 event.preventDefault()
 const Nimi = {
-  name: newName,
+  name: newName,  
   number: newNumber
 } 
 

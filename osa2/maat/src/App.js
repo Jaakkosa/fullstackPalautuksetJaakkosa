@@ -24,8 +24,7 @@ const App = () => {
   const [maat, setMaat] = useState([
   ])
 
-  console.log(maat)
-  console.log(maat[0])
+console.log(maat)
 
 
 const Haku = (event) => {
@@ -51,7 +50,8 @@ if (näytettävät.length >= 10){
 else  if(näytettävät.length <= 10 && näytettävät.length > 1) return(
     <div>
 <Hakija rajaus = {newHaku} muutos = {Haku} /> 
-{näytettävät.map(maa => <MaatEnemmän nimi = {maa.name.common} key = {maa.name.common}  />)}
+{näytettävät.map(maa => <MaatEnemmän nimi = {maa.name.common} key = {maa.name.common}  pääkaupunki = {maa.capital}
+koodi = {maa.area} lippu = {maa.flag} kielet = {maa.languages} latlng = {maa.latlng}  />)}
 
 
 </div>
@@ -63,7 +63,7 @@ else if(näytettävät.length = 1) return(
 <div>
 <Hakija rajaus = {newHaku} muutos = {Haku} /> 
 {näytettävät.map(maa => <Maat nimi = {maa.name.common} key = {maa.name.common}  pääkaupunki = {maa.capital}
-koodi = {maa.area} lippu = {maa.flag} kielet = {maa.languages}  />)}
+koodi = {maa.area} lippu = {maa.flag} kielet = {maa.languages} latlng = {maa.latlng}  />)}
 
 
 
@@ -72,6 +72,10 @@ koodi = {maa.area} lippu = {maa.flag} kielet = {maa.languages}  />)}
 
 
 
+)
+
+else return(
+  <Hakija rajaus = {newHaku} muutos = {Haku} /> 
 )
 
 

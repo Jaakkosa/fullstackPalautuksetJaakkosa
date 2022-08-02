@@ -26,17 +26,23 @@ const App = () => {
  
 
   const addNew = (event) => {
-event.preventDefault()
 const Nimi = {
   name: newName,  
-  number: newNumber
+  number: newNumber,
+  id: newName
 } 
 
 
 
 const löytyykö = (henkilö) => henkilö.name === Nimi.name
 if(persons.some(löytyykö)){
-  alert(`${Nimi.name} allready added`)
+if(window.confirm("Tällainen nimi löytyy, päivitetäänkö numero?")){
+  NoteMetodit
+  .Paivita(Nimi.name,Nimi)
+  .then(palautus => {
+    setPersons(persons.map(note => note.id !== Nimi.id ? note : palautus))
+  })
+}
 }
 else{
 NoteMetodit
@@ -81,7 +87,7 @@ const RajausToShow = näytetäänkö
     <div>
       <h2>Phonebook</h2>
       <Filter rajaus = {newRajaus} muutos = {rajauksenTutkiminen} />
-      <HenkilöPlus nimitys = {newName} tutkiminen = {sisällönTutkiminen} numeroitus = {newNumber} numeronTutkiminen = {numeronTutkiminen} uusi = {addNew} />
+      <HenkilöPlus nimitys = {newName} tutkiminen = {sisällönTutkiminen} numeroitus = {newNumber} numeronTutkiminen = {numeronTutkiminen} uusi = {addNew} /> 
       <h2>Numbers</h2>
 {RajausToShow.map(person => <Numero key={person.name} name={person.name} number={person.number} persons = {persons} SetPreson = {setPersons} id = {person.id}
 Klikki ={ () => {if(window.confirm("Poistetaanko")){ {NoteMetodit.Poista(person.id).then(palautus => NoteMetodit

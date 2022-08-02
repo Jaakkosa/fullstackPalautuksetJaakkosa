@@ -3,15 +3,16 @@ import axios from 'axios'
 import Numero from "./Numero"
 import Filter from "./Filter"
 import HenkilöPlus from "./Henkilö"
+import NoteMetodit from './numerot'
 
 const App = () => {
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    NoteMetodit
+    .HaeKaikki()
+    .then(initialNotes => {
+      setPersons(initialNotes)
+    })
   }, [])
   const [persons, setPersons] = useState([
   ]) 
@@ -31,12 +32,18 @@ const Nimi = {
   number: newNumber
 } 
 
+
+
 const löytyykö = (henkilö) => henkilö.name === Nimi.name
 if(persons.some(löytyykö)){
   alert(`${Nimi.name} allready added`)
 }
 else{
-setPersons(persons.concat(Nimi))
+NoteMetodit
+.Luo(Nimi)
+.then(palautus => {
+setPersons(persons.concat(palautus))
+})
 setNewName('')
 setNewNumber('')
 }
@@ -61,6 +68,8 @@ const rajauksenTutkiminen = (event) => {
  setNäytetäänkö(persons.some(kuuluuko))
 }
 
+
+
 const RajausToShow = näytetäänkö
 ? persons.filter(note => note.name.toLowerCase().includes(newRajaus.toLowerCase()))
 : persons.filter(note => note.name.toLowerCase().includes(newRajaus.toLowerCase()))
@@ -74,7 +83,12 @@ const RajausToShow = näytetäänkö
       <Filter rajaus = {newRajaus} muutos = {rajauksenTutkiminen} />
       <HenkilöPlus nimitys = {newName} tutkiminen = {sisällönTutkiminen} numeroitus = {newNumber} numeronTutkiminen = {numeronTutkiminen} uusi = {addNew} />
       <h2>Numbers</h2>
-{RajausToShow.map(person => <Numero key={person.name} name={person.name} number={person.number}/> )}
+{RajausToShow.map(person => <Numero key={person.name} name={person.name} number={person.number} persons = {persons} SetPreson = {setPersons} id = {person.id}
+Klikki ={ () => {if(window.confirm("Poistetaanko")){ {NoteMetodit.Poista(person.id).then(palautus => NoteMetodit
+    .HaeKaikki()
+    .then(initialNotes => {
+      setPersons(initialNotes)
+    }))}}}}/> )}
     </div>
   )
 

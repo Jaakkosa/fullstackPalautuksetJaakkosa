@@ -13,7 +13,7 @@ const MaatEnemmän = (props) => {
 
       useEffect(() => {
         axios
-          .get('https://api.openweathermap.org/data/2.5/weather?lat=' + props.latlng[0]+ '&lon=' + props.latlng[1] + '&appid=0892f04cb7497fb995cf9996284a8a8d')
+          .get('https://api.openweathermap.org/data/2.5/weather?lat=' + props.latlng[0]+ '&lon=' + props.latlng[1] + '&appid=(Tähän copypastesin tokenin)')
           .then(response => {
             SetWeather(response.data)
            

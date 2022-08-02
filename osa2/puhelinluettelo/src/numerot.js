@@ -17,12 +17,12 @@ const Luo = newObject => {
 
 const Paivita = (id, newObject) => {
   const request = axios.put(`${baseUrl}/${id}`, newObject)
-  return request.then(response => response.data)
+  request.then(response => response.data)
 }
 
 const Poista = (id) => {
   const request = axios.delete('http://localhost:3001/persons/' + String(id))
-  return request.then(response => response.data)
+  try{ return( request.then(response => response.data))} catch{ return( request.catch((error) => error )) }
 }
 
 export default {Luo, Paivita, HaeKaikki, Poista}

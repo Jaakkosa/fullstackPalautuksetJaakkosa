@@ -4,6 +4,8 @@ import Numero from "./Numero"
 import Filter from "./Filter"
 import HenkilöPlus from "./Henkilö"
 import NoteMetodit from './numerot'
+import Notification from './Ilmoitus'
+import './index.css'
 
 const App = () => {
 
@@ -21,11 +23,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newRajaus, setNewRajaus] = useState('')
   const [näytetäänkö, setNäytetäänkö] = useState(true)
+  const [Alertti,SetAlertti] = useState('')
 
 
  
 
   const addNew = (event) => {
+    event.preventDefault() 
 const Nimi = {
   name: newName,  
   number: newNumber,
@@ -41,7 +45,12 @@ if(window.confirm("Tällainen nimi löytyy, päivitetäänkö numero?")){
   .Paivita(Nimi.name,Nimi)
   .then(palautus => {
     setPersons(persons.map(note => note.id !== Nimi.id ? note : palautus))
+   
   })
+  SetAlertti('Muutettu ' + newName)
+  setTimeout(() => {
+   SetAlertti('')
+  },5000)
 }
 }
 else{
@@ -50,6 +59,10 @@ NoteMetodit
 .then(palautus => {
 setPersons(persons.concat(palautus))
 })
+ SetAlertti('Added ' + newName)
+ setTimeout(() => {
+  SetAlertti('')
+ },5000)
 setNewName('')
 setNewNumber('')
 }
@@ -83,18 +96,34 @@ const RajausToShow = näytetäänkö
 
 
 
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message = {Alertti}/>
       <Filter rajaus = {newRajaus} muutos = {rajauksenTutkiminen} />
       <HenkilöPlus nimitys = {newName} tutkiminen = {sisällönTutkiminen} numeroitus = {newNumber} numeronTutkiminen = {numeronTutkiminen} uusi = {addNew} /> 
       <h2>Numbers</h2>
 {RajausToShow.map(person => <Numero key={person.name} name={person.name} number={person.number} persons = {persons} SetPreson = {setPersons} id = {person.id}
-Klikki ={ () => {if(window.confirm("Poistetaanko")){ {NoteMetodit.Poista(person.id).then(palautus => NoteMetodit
+Klikki ={ () => {if(window.confirm("Poistetaanko")){{NoteMetodit.Poista(person.id).then(palautus => NoteMetodit
     .HaeKaikki()
     .then(initialNotes => {
       setPersons(initialNotes)
-    }))}}}}/> )}
+      console.log(3)
+      SetAlertti('Deleted ' + person.name)
+      setTimeout(() => {
+       SetAlertti('')
+      },5000)
+    }))
+  .catch( 
+    SetAlertti('Failed to Delete ' + person.name),
+    setTimeout(() => {
+     SetAlertti('')
+    },5000)
+
+
+  )}
+    }}}/> )}
     </div>
   )
 

@@ -8,7 +8,7 @@ const HenkilöPlus = (props) => {
           number: <input value = {props.numeroitus} onChange = {props.numeronTutkiminen}/>
           </div>
         <div>
-          <button type="submit">add</button>
+          <button type="Submit">add</button>
         </div>
       </form>     
     )

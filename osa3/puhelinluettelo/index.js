@@ -5,7 +5,7 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 var morgan = require('morgan')
-app.use(morgan(':method :url :status :res[content-length]  :response-time ms :body '))
+app.use(morgan(':method :url :status :res[content-length] :response-time ms :body '))
  /* app.use(morgan(function (tokens, req, res,body) {
   return [
     tokens.method(req, res),

@@ -4,6 +4,18 @@
 const express = require('express')
 const app = express()
 app.use(express.json())
+var morgan = require('morgan')
+app.use(morgan(':method :url :status :res[content-length]  :response-time ms :body '))
+ /* app.use(morgan(function (tokens, req, res,body) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens['body'].req,
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+})) */
 
 let numerot = [
     {
@@ -71,9 +83,10 @@ let numerot = [
 
   else {
     numerot = numerot.concat(person)
-  
+    morgan.token('body', request => JSON.stringify(request.body))
     response.json(person)}
-  })
+  }
+  )
   const PORT = 3001
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)

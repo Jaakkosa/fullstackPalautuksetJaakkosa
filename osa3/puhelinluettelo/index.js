@@ -5,13 +5,18 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 var morgan = require('morgan')
-app.use(morgan(':method :url :status :res[content-length] :response-time ms :body '))
- /* app.use(morgan(function (tokens, req, res,body) {
+app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))
+const cors = require('cors')
+
+app.use(cors())
+
+/*
+  app.use(morgan(function (tokens, req, res,body) {
   return [
     tokens.method(req, res),
     tokens.url(req, res),
     tokens.status(req, res),
-    tokens['body'].req,
+    tokens['body'],
     tokens.res(req, res, 'content-length'), '-',
     tokens['response-time'](req, res), 'ms'
   ].join(' ')
@@ -38,19 +43,22 @@ let numerot = [
   
 
   app.get('/', (req, res) => {
+    morgan.token('body', req => "")
     res.send('<h1>Hello World!</h1>')
   })
   
   app.get('/api/persons', (req, res) => {
+    morgan.token('body', req => "")
     res.json(numerot)
   })
   app.get('/info', (req,res) => {
-    
+    morgan.token('body', req => "")
     res.send('<h1> Puhelinluettelossa on ' + String(numerot.length) + ':n henkilön numerot </h1>' + 
     '<h2>' + String(Date()) + '</h2>')
   })
 
   app.get('/api/persons/:id', (request, response) => {
+    morgan.token('body', request => "")
     const id = Number(request.params.id)
     const person = numerot.find(person => person.id === id)
     if (person) {
@@ -71,6 +79,7 @@ let numerot = [
     const Id = Math.random()*100000000 + 1
   
     const person = request.body
+    console.log(request.body)
     person.id = Id
 
   if(!person.name || !person.number){
@@ -79,6 +88,9 @@ let numerot = [
   else if(numerot.some(henkilö => henkilö.name == person.name)){
     return response.status(400).json({ error: 'Nimi on jo luettelossa' 
   })
+  }
+  else if(person == undefined){
+    return(console.log("undefined person"))
   }
 
   else {
@@ -90,6 +102,7 @@ let numerot = [
   const PORT = 3001
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
+    app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))
   })
 
 // If you want to start measuring performance in your app, pass a function

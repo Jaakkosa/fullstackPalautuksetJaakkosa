@@ -5,22 +5,10 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 var morgan = require('morgan')
-app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))
 const cors = require('cors')
+const { request, response } = require('express')
 
-app.use(cors())
-
-/*
-  app.use(morgan(function (tokens, req, res,body) {
-  return [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    tokens['body'],
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms'
-  ].join(' ')
-})) */
+console.log(1)
 
 let numerot = [
     {
@@ -37,15 +25,24 @@ let numerot = [
       "name": "Pekka",
       "number": "47478123847238947",
       "id": 3
+    },
+    {
+      "name": "Juhani",
+      "number": "4747812384557238947",
+      "id": 12412414.1124 
     }
   ]
 
-  
+  app.use(express.static('build'))
+  app.use(cors())
+app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))
 
-  app.get('/', (req, res) => {
+console.log(2)
+
+ /* app.get('/', (req, res) => {
     morgan.token('body', req => "")
     res.send('<h1>Hello World!</h1>')
-  })
+  }) */
   
   app.get('/api/persons', (req, res) => {
     morgan.token('body', req => "")
@@ -56,7 +53,7 @@ let numerot = [
     res.send('<h1> Puhelinluettelossa on ' + String(numerot.length) + ':n henkilön numerot </h1>' + 
     '<h2>' + String(Date()) + '</h2>')
   })
-
+  console.log(3)
   app.get('/api/persons/:id', (request, response) => {
     morgan.token('body', request => "")
     const id = Number(request.params.id)
@@ -73,6 +70,25 @@ let numerot = [
     numerot = numerot.filter(person => person.id !== id)
   
     response.status(204).end()
+  });
+
+app.put('/api/persons/:id', (request,response) =>{
+  morgan.token('body', request => "")
+console.log(request.body)
+console.log("put")
+console.log(1)
+
+ numerot = numerot.map(note => note.name !== request.body.name ? note : request.body)
+ console.log(numerot)
+if(request.body){
+  console.log(request.body)
+  console.log('response')
+  response.json(request.body)
+}
+else {
+  response.status(404).send("failed").end()
+}
+
   })
 
   app.post('/api/persons', (request, response) => {
@@ -85,10 +101,10 @@ let numerot = [
   if(!person.name || !person.number){
     return response.status(400).json({ error: 'nimi tai numero puuttuu' 
   })}
-  else if(numerot.some(henkilö => henkilö.name == person.name)){
+ else if(numerot.some(henkilö => henkilö.name == person.name)){
     return response.status(400).json({ error: 'Nimi on jo luettelossa' 
-  })
-  }
+  }) 
+  } 
   else if(person == undefined){
     return(console.log("undefined person"))
   }
@@ -99,7 +115,7 @@ let numerot = [
     response.json(person)}
   }
   )
-  const PORT = 3001
+  const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
     app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))

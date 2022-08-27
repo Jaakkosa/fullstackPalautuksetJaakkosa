@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Numero from "./Numero"
 import Filter from "./Filter"
 import HenkilöPlus from "./Henkilö"
 import NoteMetodit from './numerot'
 import Notification from './Ilmoitus'
 import './index.css'
+import { unstable_renderSubtreeIntoContainer } from 'react-dom'
 
 const App = () => {
 
@@ -17,7 +17,8 @@ const App = () => {
     })
   }, [])
   const [persons, setPersons] = useState([
-  ]) 
+  ])
+  console.log("haettu") 
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -26,26 +27,29 @@ const App = () => {
   const [Alertti,SetAlertti] = useState('')
 
 
- 
+  console.log("10") 
 
   const addNew = (event) => {
     event.preventDefault() 
 const Nimi = {
   name: newName,  
   number: newNumber,
-  id: newName
+  id: ""
 } 
 
-
+console.log("22") 
 
 const löytyykö = (henkilö) => henkilö.name === Nimi.name
 if(persons.some(löytyykö)){
 if(window.confirm("Tällainen nimi löytyy, päivitetäänkö numero?")){
+  console.log("confirmed")
+  console.log(persons)
+  const Id = persons.find(henkilö => henkilö.name == Nimi.name)
+  Nimi.id = Id.id
   NoteMetodit
-  .Paivita(Nimi.name,Nimi)
+  .Paivita(Id.id,Nimi)
   .then(palautus => {
-    setPersons(persons.map(note => note.id !== Nimi.id ? note : palautus))
-   
+    setPersons(persons.map(note => note.id !== palautus.id ? note : palautus))
   })
   SetAlertti('Muutettu ' + newName)
   setTimeout(() => {

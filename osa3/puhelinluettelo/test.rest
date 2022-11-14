@@ -1,7 +1,2 @@
-POST https://obscure-scrubland-48272.herokuapp.com/api/persons
+POST http://localhost:3001/
 Content-Type: application/json
-
-{
- "name": "MIaaaiiaaaaaaaaaaaaaaaaaaaaaaaaakko Kuukkoaaonen",
-      "number": "0402357194287"
-}

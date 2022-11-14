@@ -10,9 +10,10 @@ const HaeKaikki = () => {
   }
 
 
-const Luo = newObject => {
+
+const Luo = (newObject) => {
   const request = axios.post(baseUrl, newObject)
-  return request.then(response => response.data)
+  return request.then(response => response.data).catch(error => {return error.response.data})
 }
 
 const Paivita = (id, newObject) => {

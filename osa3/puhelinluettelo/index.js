@@ -1,125 +1,129 @@
 
 
-
+require('dotenv').config()
 const express = require('express')
 const app = express()
 app.use(express.json())
 var morgan = require('morgan')
 const cors = require('cors')
 const { request, response } = require('express')
+const Note = require('./numero')
 
-console.log(1)
 
-let numerot = [
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 1
-    },
-    {
-      "name": "Yrjö",
-      "number": "123",
-      "id": 2
-    },
-    {
-      "name": "Pekka",
-      "number": "47478123847238947",
-      "id": 3
-    },
-    {
-      "name": "Juhani",
-      "number": "4747812384557238947",
-      "id": 12412414.1124 
-    }
-  ]
+console.log('5')
+app.use(express.static('build'))
+app.use(cors())
+morgan.token('body', req => {
+  return JSON.stringify(req.body)
+})
 
-  app.use(express.static('build'))
-  app.use(cors())
+
 app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))
 
 console.log(2)
 
- /* app.get('/', (req, res) => {
+console.log('6')
+
+/* app.get('/', (req, res) => {
     morgan.token('body', req => "")
     res.send('<h1>Hello World!</h1>')
   }) */
-  
-  app.get('/api/persons', (req, res) => {
-    morgan.token('body', req => "")
-    res.json(numerot)
-  })
-  app.get('/info', (req,res) => {
-    morgan.token('body', req => "")
-    res.send('<h1> Puhelinluettelossa on ' + String(numerot.length) + ':n henkilön numerot </h1>' + 
-    '<h2>' + String(Date()) + '</h2>')
-  })
-  console.log(3)
-  app.get('/api/persons/:id', (request, response) => {
-    morgan.token('body', request => "")
-    const id = Number(request.params.id)
-    const person = numerot.find(person => person.id === id)
-    if (person) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
-  })
 
-  app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    numerot = numerot.filter(person => person.id !== id)
-  
-    response.status(204).end()
-  });
+app.get('/api/persons', (request, response, next) => {
+  Note.find({}).then(notes => {
+    response.json(notes)
+  }).catch(error => next(error))
+})
 
-app.put('/api/persons/:id', (request,response) =>{
-  morgan.token('body', request => "")
-console.log(request.body)
-console.log("put")
-console.log(1)
+app.get('/api/persons/:id', (request, response, next) => {
+  Note.findById(request.params.id).then(person => {
+    response.json(person)
+  }).catch(error => next(error))
+})
 
- numerot = numerot.map(note => note.name !== request.body.name ? note : request.body)
- console.log(numerot)
-if(request.body){
-  console.log(request.body)
-  console.log('response')
-  response.json(request.body)
-}
-else {
-  response.status(404).send("failed").end()
-}
+app.get('/info', (request, response, next) => {
+  Note.find({}).then(notes => {
+    response.json('Puhelinluettelossa on ' + String(notes.length) + ':n henkilön numerot' + '' + String(Date()) + '')
+  }).catch(error => next(error))
+})
 
-  })
+console.log('8')
+console.log(3)
+app.get('/api/notes/:id', (request, response, next) => {
+  Note.findById(request.params.id).then(note => {
+    response.json(note)
+  }).catch(error => next(error))
+})
 
-  app.post('/api/persons', (request, response) => {
-    const Id = Math.random()*100000000 + 1
-  
-    const person = request.body
-    console.log(request.body)
-    person.id = Id
+app.delete('/api/persons/:id', (request, response, next) => {
+  Note.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
 
-  if(!person.name || !person.number){
-    return response.status(400).json({ error: 'nimi tai numero puuttuu' 
-  })}
- else if(numerot.some(henkilö => henkilö.name == person.name)){
-    return response.status(400).json({ error: 'Nimi on jo luettelossa' 
-  }) 
-  } 
-  else if(person == undefined){
-    return(console.log("undefined person"))
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
+
+  const person = {
+    name: name,
+    number: number
   }
 
-  else {
-    numerot = numerot.concat(person)
-    morgan.token('body', request => JSON.stringify(request.body))
-    response.json(person)}
+  Note.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
+
+app.post('/api/persons', (request, response, next) => {
+  const { name, number } = request.body
+
+  if (request.body === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
-  )
-  const PORT = process.env.PORT || 3001;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-    app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))
+
+  else {  const henkilo = new Note({
+    name: name,
+    number: number
   })
+
+  henkilo.save().then(savedNote => {
+    return response.json(savedNote)
+  }).catch(error => next(error))
+  }
+})
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
+
+
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+  app.use(morgan(':method :url :status :res[content-length] :response-time ms :body'))
+})
+
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

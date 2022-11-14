@@ -61,14 +61,26 @@ else{
 NoteMetodit
 .Luo(Nimi)
 .then(palautus => {
+ const message = String(palautus.error)
+  if (message.includes("Note validation failed:")){
+    SetAlertti(String(palautus.error))
+    setTimeout(() => {
+      SetAlertti('')
+     },5000)
+     setNewName('')
+setNewNumber('')
+  }
+else{
 setPersons(persons.concat(palautus))
-})
- SetAlertti('Added ' + newName)
- setTimeout(() => {
-  SetAlertti('')
- },5000)
+SetAlertti('Added ' + newName)
+setTimeout(() => {
+ SetAlertti('')
+},5000)
 setNewName('')
 setNewNumber('')
+}
+
+})
 }
   }
 const sisällönTutkiminen = (event) => {
@@ -83,23 +95,25 @@ const numeronTutkiminen = (event) => {
  
 
 const rajauksenTutkiminen = (event) => {
-  setNewRajaus(event.target.value)
+
+setNewRajaus(event.target.value)
+  
   const kuuluuko = (henkilö) => henkilö.name.toLowerCase().includes(newRajaus.toLowerCase())
-  console.log(newRajaus.toLowerCase())
 
 
  setNäytetäänkö(persons.some(kuuluuko))
 }
 
-
+console.log(persons)
 
 const RajausToShow = näytetäänkö
-? persons.filter(note => note.name.toLowerCase().includes(newRajaus.toLowerCase()))
-: persons.filter(note => note.name.toLowerCase().includes(newRajaus.toLowerCase()))
+? persons.filter(note => String(note.name).toLowerCase().includes(newRajaus.toLowerCase()))
+: persons.filter(note => String(note.name).toLowerCase().includes(newRajaus.toLowerCase()))
 
 
 
 
+// kun servulle tulee pyyntö delition niin pitää returnaa joukko, muuten map ei toimi
 
   return (
     <div>

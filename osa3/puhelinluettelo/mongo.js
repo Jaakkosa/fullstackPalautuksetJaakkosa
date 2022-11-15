@@ -32,7 +32,6 @@ const person = new Note({
   name: process.argv[3],
   number: process.argv[4]
 })
-// mongo näköjänä ite loi id:t joten ei ollut tarvetta luoda niitä itse
 
 const Seivi = () => {
   if(process.argv.length === 5){

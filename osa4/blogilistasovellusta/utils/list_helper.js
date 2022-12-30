@@ -29,11 +29,10 @@ const mostBlogs = (blogs) => {
     let newAuthor = true
     blogs.forEach(blog => {
     authorList.forEach(author => {
-        console.log("CURRENT AUTHOR AND BLOG",author,blog)
         if(author.name === blog.author){
             author.amount = author.amount + 1
             newAuthor = false
-            console.log(authorList,"AFTER ADDITION AFTER ADDITION")
+           
         }
     })
     if(newAuthor){
@@ -41,7 +40,7 @@ const mostBlogs = (blogs) => {
             name: blog.author,
             amount: 1
         })
-    console.log(authorList,"AFTER PUSH AFTER PUSH AFTER PUSH AFTER PUSH")
+   
     }
 newAuthor = true
     })
@@ -51,7 +50,6 @@ newAuthor = true
         mostPublished = author
     }
    }) 
-console.log(mostPublished, "MOST PUBLISHED")
 return({
     author: mostPublished.name,
     blogs: mostPublished.amount
@@ -68,7 +66,7 @@ const mostLikes = (blogs) => {
     if(author.name === blog.author){
         author.amount = author.amount + blog.likes
             newAuthor = false
-            console.log(authorList,"AFTER ADDITION AFTER ADDITION")
+         
     }
 
      })
@@ -77,7 +75,6 @@ const mostLikes = (blogs) => {
             name: blog.author,
             amount: blog.likes
         })
-    console.log(authorList,"AFTER PUSH AFTER PUSH AFTER PUSH AFTER PUSH")
     }
 newAuthor = true
     })
@@ -87,7 +84,6 @@ newAuthor = true
             mostLiked = author
         }
        }) 
-    console.log(mostLiked, "MOST PUBLISHED")
     return({
         author: mostLiked.name,
        likes: mostLiked.amount

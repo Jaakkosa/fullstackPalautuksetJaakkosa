@@ -1,10 +1,12 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 const api = supertest(app)
 
 const Blog = require('../models/blog')
+const { response } = require('../app')
 
 jest.setTimeout(20000) // jostain syystä mongodb tarvitsi lisäaikaa
 
@@ -133,7 +135,100 @@ test('there are two blogs', async () => {
       .expect(400)
   }) 
 
+  describe('when there is initially one user at db', () => {
+    beforeEach(async () => {
+      await User.deleteMany({})
   
+      const passwordHash = await bcrypt.hash('sekret', 10)
+      const user = new User({ username: 'root', passwordHash })
+  
+      await user.save()
+    })
+  
+    test('creation succeeds with a fresh username', async () => {
+      const usersAtStart = await api.get('/api/users')
+  
+      const newUser = {
+        username: 'mluukkai',
+        name: 'Matti Luukkainen',
+        password: 'salainen',
+      }
+  
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+  
+      const usersAtEnd = await api.get('/api/users')
+      expect(usersAtEnd.body).toHaveLength(usersAtStart.body.length + 1)
+  
+      const usernames = usersAtEnd.body.map(u => u.username)
+      expect(usernames).toContain(newUser.username)
+    })
+    test('error occurs if password  is too short', async () => {
+      const newUser = {
+        username: 'mluukkai',
+        name: 'Matti Luukkainen',
+        password: 'sa',
+      }
+     const testi =  await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+      .expect('Content-Type', /application\/json/)
+
+      expect(testi.body.error).toBe("a password must be defined and it must be 3 characters or longer")
+
+    })
+
+    test('error occurs if password doesnt exist', async () => {
+      const newUser = {
+        username: 'mluukkai',
+        name: 'Matti Luukkainen',
+      }
+      const testi = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      expect(testi.body.error).toBe("a password must be defined and it must be 3 characters or longer")
+
+    
+    })
+    test('error occurs if username doesnt exist', async () => {
+      const newUser = {
+        name: 'Matti Luukkainen',
+       password: 'askdjk123'
+      }
+      const testi = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      expect(testi.body.error).toBe('a username must be defined')
+    
+    })
+
+    test('error occurs if username isnt unique', async () => {
+      const newUser = {
+        username: 'root',
+       password: 'askdjk123'
+      }
+      const testi = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+      expect(testi.body.error).toBe("username must be unique")
+    
+    })
+
+  })
 
   afterAll(() => {
     mongoose.connection.close()

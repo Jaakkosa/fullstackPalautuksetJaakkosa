@@ -17,34 +17,38 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggattu')
+    const loggedUserJSON = window.localStorage.getItem('token')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
     }
   }, [])
-
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({
         username, password,
       })
+      console.log("loginpressed")
+      console.log(user)
       blogService.setToken(user.token)
       window.localStorage.setItem(
-        'logattu', JSON.stringify(user)
+        'token', JSON.stringify(user)
       )
       setUser(user)
       setUsername('')
       setPassword('')
+      console.log(window.localStorage.getItem('token'))
     } catch (exception) {
-      setErrorMessage('virhe')
+      console.log(exception) // Add this line to log the actual exception
+      setErrorMessage('väärä käyttis tai')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
   }
+  
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>

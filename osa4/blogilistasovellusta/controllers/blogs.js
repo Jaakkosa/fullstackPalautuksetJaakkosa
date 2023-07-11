@@ -5,6 +5,8 @@ const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 const User = require('../models/user')
 const usersRouter = require('./users')
+require('dotenv').config();
+
 
 
 notesRouter.get('/api/blogs', (request, response) => {
@@ -27,7 +29,7 @@ notesRouter.post('/api/blogs', async (request,response) => {
 console.log("post")
 console.log(request.body)
   const token = getTokenFrom(request)
-  console.log(token)
+  console.log(token)  
   const decodedToken = jwt.verify(token, process.env.SECRET)
   if (!token || !decodedToken.id) {
     return response.status(401).json(
@@ -67,15 +69,17 @@ const blog = new Blog({
 })
 
 notesRouter.delete('/api/blogs/:id', async (request,response) => {
+  console.log("delete received")
   const token = getTokenFrom(request)
   const decodedToken = jwt.verify(token, process.env.SECRET)
+  console.log(decodedToken)
 const id = request.params.id
 
 const poistettava = await Blog.findById(id)
-console.log(poistettava)
+console.log(poistettava.user)
 const user = await User.findById(decodedToken.id)
 
-if(poistettava.user._id.toString() === user._id.toString()){
+if(poistettava.user._id.toString() === user.id.toString()){
 
 await Blog.findByIdAndRemove(id)
 .then(result  => {response.status(204).json().end()})

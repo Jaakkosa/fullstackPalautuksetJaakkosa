@@ -21,10 +21,21 @@ const create = async newObject => {
   return response.data
 }
 
+const remove = async (id) => {
+
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const vastaus = await axios.delete(`${baseUrl}/${id}`,config)
+
+  return vastaus.data
+}
+
 const update = (id, newObject) => {
   const request = axios.put(`${ baseUrl }/${id}`, newObject)
   return request.then(response => response.data)
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, update, setToken }
+export default { getAll, create, update, setToken, remove}

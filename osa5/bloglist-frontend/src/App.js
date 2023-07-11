@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Uusiblogi from './components/uusiBlog'
+
+
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -48,6 +52,20 @@ const App = () => {
     }
   }
 
+  const deleteBlogi = async (id) => {
+    
+    console.log(id)
+   
+    try {
+    await blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id));
+      return true;
+    } catch (error) {
+      console.log("Error deleting blog:", error);
+      return false;
+    }
+  };
+
   const handleLogout = () => {
     window.localStorage.removeItem('token');
     window.location.reload();
@@ -69,9 +87,16 @@ const App = () => {
     blogService.create(data)
       .then(response => {
         setLuotu(`${author} luoma blogi ${title} lisäty!`)
+        blogService.getAll()
+        .then(updatedBlogs => {
+          setBlogs(updatedBlogs);
+        })
+                        .catch(error => {
+          console.log("Failed to fetch blogs:", error);
+        }   );
         setTimeout(() => {
           setLuotu(null)
-          window.location.reload();
+     
         }, 5000)
       })
       .catch(error => {
@@ -113,57 +138,36 @@ const App = () => {
     </form>      
   )
 
-  const newBlogForm = () => (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label >Title:</label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-      <div>
-        <label >Author:</label>
-        <input
-          type="text"
-          id="author"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-      </div>
-      <div>
-        <label >URL:</label>
-        <input
-          type="text"
-          id="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-      </div>
-      <button type="submit">Submit</button>
-      <button type="button" onClick={suljeFormi}>Cancel</button>
-    </form>
-  )
+  
 
   return (
     <div>
       <h2>Blogs</h2>
-      <button onClick={handleLogout}>Logout</button>
     {errorMessage && <div style={{color: 'orange'}}>{errorMessage}</div>}
         {luotu && <div style={{color: 'green'}}>{luotu}</div>}
  {!user && loginForm()} 
+
         {user && 
         <div>
+           <button onClick={handleLogout}>Logout</button>
           <p>{user.name} kirjautunut</p>
          
 
           <button type="button" onClick={avaaFormi}>Uus blogi</button>
-             {showNewBlogForm && newBlogForm()}
+             {showNewBlogForm && <Uusiblogi 
+              handleSubmit = {handleSubmit}
+              setTitle= {(e) => setTitle(e.target.value)}
+              setAuthor= {(e) => setAuthor(e.target.value)}
+              setUrl= {(e) => setUrl(e.target.value)}
+               suljeFormi={suljeFormi}
+               title={title}
+               author={author}
+               url={url}
+               />}
 
-                {blogs.map(blog =>
-            <Blog key= {blog.id} blog={blog} />
+                {blogs.sort((enemmän,vähemmän) => vähemmän.likes - enemmän.likes)
+                .map(blog =>
+            <Blog key= {blog.id} blog={blog} deleteBlogi={deleteBlogi} />
           )}
         </div>
       } 

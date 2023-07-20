@@ -51,7 +51,17 @@ const App = () => {
       }, 5000)
     }
   }
+const likeBlogi = async (id) => {
 
+  try {
+await blogService.like(id)
+return true
+  }
+  catch (error) {
+    console.log("Error liking blog:", error);
+    return false;
+  }
+}
   const deleteBlogi = async (id) => {
     
     console.log(id)
@@ -167,7 +177,7 @@ const App = () => {
 
                 {blogs.sort((enemmän,vähemmän) => vähemmän.likes - enemmän.likes)
                 .map(blog =>
-            <Blog key= {blog.id} blog={blog} deleteBlogi={deleteBlogi} />
+            <Blog key= {blog.id} blog={blog} deleteBlogi={deleteBlogi} likeBlogi={likeBlogi} user={user} />
           )}
         </div>
       } 

@@ -1,24 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types'
-
-
+import PropTypes from 'prop-types';
 
 const Uusiblogi = ({ handleSubmit, setTitle, setAuthor, setUrl, suljeFormi, title, author, url }) => {
- 
-
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>Title:</label>
-        <input type="text" value={title} onChange={setTitle} />
+        <label htmlFor="titleInput">Title:</label>
+        <input type="text" value={title} onChange={setTitle} id="titleInput" placeholder='title'/>
       </div>
       <div>
-        <label>Author:</label>
-        <input type="text" value={author} onChange={setAuthor} />
+        <label htmlFor="authorInput">Author:</label>
+        <input type="text" value={author} onChange={setAuthor} id="authorInput" placeholder='author' />
       </div>
       <div>
-        <label>URL:</label>
-        <input type="text" value={url} onChange={setUrl} />
+        <label htmlFor="urlInput">URL:</label>
+        <input type="text" value={url} onChange={setUrl} id="urlInput" placeholder='url'/>
       </div>
       <button type="submit">Submit</button>
       <button type="button" onClick={suljeFormi}>
@@ -37,7 +33,6 @@ Uusiblogi.propTypes = {
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
-}
-
+};
 
 export default Uusiblogi;

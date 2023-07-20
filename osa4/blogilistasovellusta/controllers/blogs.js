@@ -38,7 +38,7 @@ console.log(request.body)
  const user = await User.findById(decodedToken.id)
 
   console.log(user)
-  console.log(user._id.toString())
+
 
 
   if (!request.body.likes) {

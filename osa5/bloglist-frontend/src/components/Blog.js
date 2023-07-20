@@ -1,9 +1,9 @@
 import { useState } from "react"
-import axios from "axios";
 
 
 
-const Blog = ({ blog, deleteBlogi}) => {
+
+const Blog = ({ blog, deleteBlogi, likeBlogi, user}) => {
 
   const [showNewBlogForm, setShowNewBlogForm] = useState(false)
   const [likes, setLikes] = useState(blog.likes);
@@ -11,8 +11,8 @@ const Blog = ({ blog, deleteBlogi}) => {
   const handleLike = async () => {
     try {
       const updatedBlog = { ...blog, likes: likes + 1 };
-      await axios.put(`/api/blogs/${blog.id}`, updatedBlog);
-      setLikes(likes + 1);
+    const updated = await likeBlogi(blog.id, updatedBlog)
+    if(updated)  setLikes(likes + 1);
     } catch (error) {
       console.log("errori tykkäyksissä:", error);
     }
@@ -60,7 +60,7 @@ const Blog = ({ blog, deleteBlogi}) => {
       <div>
     Author:{blog.author} URL:{blog.url} Likes: {likes} 
     <button onClick={handleLike}>Like</button>
-    <button onClick={handleDelete}>Delete</button>
+   { (blog.user.username === user.username) && (<button onClick={handleDelete}>Delete</button>) }
 
     </div>
   )
@@ -68,7 +68,7 @@ const Blog = ({ blog, deleteBlogi}) => {
   return (
 
     
-  <div style={blogStyle}>
+  <div style={blogStyle} className="blogii">
     {button}
     Title:{blog.title} {showNewBlogForm && <RestOfInfo/>}
    

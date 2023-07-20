@@ -27,15 +27,25 @@ const remove = async (id) => {
     headers: { Authorization: token },
   };
 
+
   const vastaus = await axios.delete(`${baseUrl}/${id}`,config)
 
   return vastaus.data
+
 }
+const like = async (blogId, updatedBlogData) => {
+  try {
+    const response = await axios.put(`/api/blogs/${blogId}`, updatedBlogData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const update = (id, newObject) => {
   const request = axios.put(`${ baseUrl }/${id}`, newObject)
   return request.then(response => response.data)
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, create, update, setToken, remove}
+
+export default { getAll, create, update, setToken, remove, like}

@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { LiketheAnecdote, CreateAnecdote} from './AnecdoteReducer'
+import { createAnecdote} from './AnecdoteReducer'
 import React, { useState } from 'react';
 
 
@@ -10,7 +10,7 @@ const AnecdoteForm = () => {
     
     const AddAnecdote = (event) => {
         event.preventDefault();
-        dispatch(CreateAnecdote(anecdote))
+        dispatch(createAnecdote(anecdote))
     setAnecdote('')
       }
 

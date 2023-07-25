@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { LiketheAnecdote, CreateAnecdote} from './AnecdoteReducer'
 import React, { useState } from 'react';
+import { likeAnecdote } from './AnecdoteReducer';
 
 const AnecdoteList = () => {
 
@@ -18,12 +19,17 @@ const AnecdoteList = () => {
       });
     const dispatch = useDispatch()
   
-  
+    const sortAnecdotes = (anecdotes) => {
+      return anecdotes.slice().sort((a, b) => b.votes - a.votes);
+    };
+
     const vote = (id) => {
-     dispatch(LiketheAnecdote(id))
+      dispatch(likeAnecdote(id))
+
     }
 
-    const list = (anecdotes.map(anecdote =>
+    const sortedAnecdotes = sortAnecdotes(anecdotes)
+    const list = (sortedAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}

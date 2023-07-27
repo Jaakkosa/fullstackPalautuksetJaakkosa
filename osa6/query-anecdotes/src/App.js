@@ -1,11 +1,14 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useNotification } from './components/Notification'
 
 import axios from 'axios';
 
 
 const App = () => {
+  const { showNotification } = useNotification()
+
   const queryClient = useQueryClient();
   const baseUrl = 'http://localhost:3001/anecdotes'
 
@@ -24,6 +27,8 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     voteAnecdote.mutate(anecdote);
+    showNotification(`${anecdote.content} voted`)
+
   }
 
 

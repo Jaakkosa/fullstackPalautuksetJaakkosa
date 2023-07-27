@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
+import { useNotification } from './/Notification'
 
 
 
@@ -15,6 +16,9 @@ const AnecdoteForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries('anecdotes')
     },
+    onError: () => {
+      showNotification("Creating anecdote failed due to it being too short")
+    }
   })
     const getId = () => (100000 * Math.random()).toFixed(0)
 
@@ -25,13 +29,16 @@ const AnecdoteForm = () => {
       votes: 0
     }
   }
-  
+  const { showNotification } = useNotification()
+
   const onCreate = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
 newAnecdote.mutate(asObject(content))
+
     event.target.anecdote.value = ''
-    console.log('new anecdote')
+    showNotification(`${content} created`)
+
 }
 
   return (

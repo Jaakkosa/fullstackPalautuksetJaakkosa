@@ -1,13 +1,29 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+
 import axios from 'axios';
 
 
 const App = () => {
+  const queryClient = useQueryClient();
+  const baseUrl = 'http://localhost:3001/anecdotes'
+
+  const aanestys = anecdote =>
+  axios.put(`${baseUrl}/${anecdote.id}`, {
+    ...anecdote,
+    votes: anecdote.votes + 1,
+  }).then (takaisin => takaisin.data);
+
+  const voteAnecdote = useMutation(aanestys, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('anecdotes')
+    },
+  })
+
 
   const handleVote = (anecdote) => {
-    console.log('vote')
+    voteAnecdote.mutate(anecdote);
   }
 
 
